@@ -1,4 +1,4 @@
-package com.tapcus.portfoliowebsitejava.dao.Impl;
+package com.tapcus.portfoliowebsitejava.dao.impl;
 
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;

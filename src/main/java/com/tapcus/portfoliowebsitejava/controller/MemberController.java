@@ -6,6 +6,7 @@ import com.tapcus.portfoliowebsitejava.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,10 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "Hello";
+    }
     @PostMapping("/register")
     public ResponseEntity<Result<Object>> register(@RequestBody @Valid MemberRegisterRequest memberRegisterRequest) {
 
