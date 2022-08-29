@@ -30,7 +30,7 @@ public class MemberController {
 
         Result<Object> r = new Result<>();
         r.setCode(200);
-        r.setMsg("創建成功");
+        r.setMessage("創建成功");
         r.setData(map);
 
         return ResponseEntity.status(HttpStatus.OK).body(r);

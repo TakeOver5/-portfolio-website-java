@@ -1,10 +1,13 @@
 package com.tapcus.portfoliowebsitejava.dao;
 
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
+import com.tapcus.portfoliowebsitejava.model.Member;
 
 public interface MemberDao {
 
     // 創建會員
-    Integer createUser(MemberRegisterRequest memberRegisterRequest);
+    Integer createMember(MemberRegisterRequest memberRegisterRequest);
+
+    Member getMemberByEmail(String email);
 
 }

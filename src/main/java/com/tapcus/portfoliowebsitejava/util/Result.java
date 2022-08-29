@@ -7,7 +7,7 @@ public class Result<T> {
 
     private int code;
 
-    private String msg;
+    private String message;
     private T data;
 
     /* 通用成功返回 */
@@ -18,7 +18,7 @@ public class Result<T> {
     public Result<T> succ(int code, String msg, T data) {
         Result<T> r = new Result<>();
         r.setCode(code);
-        r.setMsg(msg);
+        r.setMessage(msg);
         r.setData(data);
         return r;
     }
@@ -31,7 +31,7 @@ public class Result<T> {
     public Result<T> fail(int code, String msg, T data) {
         Result<T> r = new Result<>();
         r.setCode(code);
-        r.setMsg(msg);
+        r.setMessage(msg);
         r.setData(data);
         return r;
     }

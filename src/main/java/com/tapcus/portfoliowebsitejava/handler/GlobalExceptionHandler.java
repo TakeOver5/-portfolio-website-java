@@ -1,4 +1,4 @@
-package com.tapcus.portfoliowebsitejava.Handler;
+package com.tapcus.portfoliowebsitejava.handler;
 
 import com.tapcus.portfoliowebsitejava.util.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestControllerAdvice
@@ -24,5 +25,14 @@ public class GlobalExceptionHandler {
         log.error("參數校驗異常 ---------------- {}", objectError.getDefaultMessage());
 
         return new Result<>().fail(objectError.getDefaultMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = ResponseStatusException.class)
+    public Result<Object> handler(ResponseStatusException e) {
+
+        log.error("參數校驗異常 ---------------- {}", e.getMessage());
+
+        return new Result<>().fail(e.getMessage());
     }
 }
