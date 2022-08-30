@@ -25,6 +25,7 @@ public class MemberController {
     public String welcome() {
         return "Hello";
     }
+
     @PostMapping("/register")
     public ResponseEntity<Result<Object>> register(@RequestBody @Valid MemberRegisterRequest memberRegisterRequest) {
 

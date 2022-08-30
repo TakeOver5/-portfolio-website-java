@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 // Spring Security 判斷是身分錯誤的時候，會經過的 handler
 // 這邊能定義要回復的 json 訊息，並回傳 status code = 403
@@ -23,7 +22,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         // 權限不足
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         PrintWriter out = response.getWriter();
-        Result failResult = new Result().fail("權限不足：" + accessDeniedException.getMessage());
+        Result<String> failResult = Result.error("權限不足" , accessDeniedException.getMessage());
         ObjectMapper om = new ObjectMapper();
         out.write(om.writeValueAsString(failResult));
         out.flush();

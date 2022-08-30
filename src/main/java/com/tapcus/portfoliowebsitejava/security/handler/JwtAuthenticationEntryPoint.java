@@ -20,7 +20,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // 401 未認證
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter out = response.getWriter();
-        Result failResult = new Result().fail("認證失敗，請先登入：" + authException.getMessage());
+        Result<String> failResult = Result.error("認證失敗，請先登入", authException.getMessage());
         ObjectMapper om = new ObjectMapper();
         out.write(om.writeValueAsString(failResult));
         out.flush();

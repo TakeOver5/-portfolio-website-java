@@ -1,10 +1,12 @@
 package com.tapcus.portfoliowebsitejava.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tapcus.portfoliowebsitejava.security.component.MyUser;
 import com.tapcus.portfoliowebsitejava.util.JwtUtils;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +31,8 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         resp.setContentType("application/json;charset=UTF-8");
         PrintWriter out = resp.getWriter();
 
+        // ((MyUser)(authentication.getPrincipal())).getMemberId();
+
         // 生成 jwt
         String jwt = jwtUtils.generateToken(authentication.getName());
         resp.setHeader(jwtUtils.getHeader(), jwt);
@@ -39,7 +43,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         Map<String, String> result = new HashMap<>();
         result.put("authority", authority);
 
-        Result succResult = new Result().succ(result);
+        Result<Map<String, String>> succResult = Result.success(result);
 
         // 寫入
         ObjectMapper om = new ObjectMapper();

@@ -35,7 +35,7 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
         resp.setHeader(jwtUtils.getHeader(), "");
 
 
-        Result succResult = new Result().succ("");
+        Result<String> succResult = Result.error("");
 
         // 寫入
         ObjectMapper om = new ObjectMapper();
