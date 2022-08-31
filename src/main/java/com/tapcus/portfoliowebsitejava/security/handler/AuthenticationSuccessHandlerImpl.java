@@ -1,7 +1,6 @@
 package com.tapcus.portfoliowebsitejava.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tapcus.portfoliowebsitejava.security.component.MyUser;
 import com.tapcus.portfoliowebsitejava.util.JwtUtils;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,6 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest res, HttpServletResponse resp, Authentication authentication) throws IOException, ServletException {
         resp.setContentType("application/json;charset=UTF-8");
         PrintWriter out = resp.getWriter();
-
-        // ((MyUser)(authentication.getPrincipal())).getMemberId();
 
         // 生成 jwt
         String jwt = jwtUtils.generateToken(authentication.getName());

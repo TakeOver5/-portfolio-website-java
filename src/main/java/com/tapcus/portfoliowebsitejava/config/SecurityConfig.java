@@ -52,6 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/logout"
     };
 
+    private static final String[] URL_USER = {
+            "/welcome",
+            "/avatar/**"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 自定義用戶驗證和加密方式
@@ -69,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .and()
                 .authorizeRequests().antMatchers("/login").permitAll()
-                .antMatchers("/welcome").hasRole("user")
+                .antMatchers(URL_USER).hasRole("user")
                 .antMatchers("/members").hasRole("admin")
                 .antMatchers(URL_WHITELIST).permitAll()
                 .and()

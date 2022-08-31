@@ -5,19 +5,29 @@ import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.MemberService;
 import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class MemberController {
 
     @Autowired
@@ -44,6 +54,46 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
+    @PostMapping("/avatar")
+    public ResponseEntity<Result<Object>> updateAvatar(@RequestParam("file") MultipartFile file,
+                                                       Principal principal) throws IOException {
+
+        /* 挖 id 出來 */
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member userDetails = (Member) object;
+        log.info("username --- {}", userDetails.getMemberId());
+
+        // 取得檔名，驗證副檔名
+        String filename = file.getOriginalFilename();
+
+        // 得到副檔名
+        String fx = FilenameUtils.getExtension(filename);
+        if(!(fx.equals("png") || fx.equals("jpg")))
+            throw new IOException("檔案格式不正確");
+
+        // 驗證 < 64kb
+        double fs = (double) file.getSize() / 1024;
+        if(fs >= 64)
+            throw new IOException("檔案大小大於 64 kb");
+
+        // 驗證長寛
+        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+        int height = bufferedImage.getHeight();
+        int width = bufferedImage.getWidth();
+        if(height > 200 || width > 200)
+            throw new IOException("圖片大小不正確");
+
+        byte[] avatar = memberService.updateAvatar(principal.getName(), file);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("avatar", avatar);
+
+        Result<Object> r = new Result<>(200, "更新成功", map);
+
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
     @GetMapping("/members")
     public ResponseEntity<Page<List<Member>>> getMembers(@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
                                                          @RequestParam(defaultValue = "0") @Min(0) Integer offset) {
@@ -55,7 +105,6 @@ public class MemberController {
         result.setLimit(limit);
         result.setOffset(offset);
         result.setTotal(total);
-
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

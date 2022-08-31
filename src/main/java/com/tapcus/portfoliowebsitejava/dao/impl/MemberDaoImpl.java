@@ -74,4 +74,16 @@ public class MemberDaoImpl implements MemberDao {
         Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
         return count;
     }
+
+    @Override
+    public byte[] updateAvatar(String email, byte[] image) {
+        String sql = "UPDATE member SET " +
+                "avatar = :avatar " +
+                "where email = :email";
+        Map<String, Object> map = new HashMap<>();
+        map.put("avatar", image);
+        map.put("email", email);
+        namedParameterJdbcTemplate.update(sql, map);
+        return image;
+    }
 }

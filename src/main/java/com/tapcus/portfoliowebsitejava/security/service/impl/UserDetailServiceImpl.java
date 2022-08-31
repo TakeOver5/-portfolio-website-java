@@ -34,7 +34,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
         int memberId = member.getMemberId();
 
         return new MyUser(username,
-                        password,
-                        AuthorityUtils.commaSeparatedStringToAuthorityList(authority), memberId);
+                          password,
+                          AuthorityUtils.commaSeparatedStringToAuthorityList(authority),
+                          memberId);
     }
 }

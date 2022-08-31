@@ -11,9 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+
+import java.io.IOException;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -50,5 +54,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Integer countProduct() {
         return memberDao.countProduct();
+    }
+
+    @Override
+    public byte[] updateAvatar(String email, MultipartFile file) throws IOException {
+        byte[] bytes = FileCopyUtils.copyToByteArray(file.getInputStream());
+        return memberDao.updateAvatar(email, bytes);
     }
 }

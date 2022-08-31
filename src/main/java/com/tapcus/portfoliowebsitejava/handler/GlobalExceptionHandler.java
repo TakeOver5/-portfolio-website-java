@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Slf4j
@@ -45,6 +46,12 @@ public class GlobalExceptionHandler {
     public Result<String> handler(JwtException e) {
         log.error("token 異常 ---------------- {}", e.getMessage());
         return Result.error(401, e.getMessage());
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = IOException.class)
+    public Result<String> handler(IOException e) {
+        log.error("檔案上傳異常 ---------------- {}", e.getMessage());
+        return Result.error(400, e.getMessage());
     }
 
     // 500 - Internal Server Error 通用例外
