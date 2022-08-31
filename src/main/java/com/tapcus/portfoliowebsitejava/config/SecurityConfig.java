@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/login").permitAll()
                 .antMatchers("/welcome").hasRole("user")
+                .antMatchers("/members").hasRole("admin")
                 .antMatchers(URL_WHITELIST).permitAll()
                 .and()
                 // 登出配置

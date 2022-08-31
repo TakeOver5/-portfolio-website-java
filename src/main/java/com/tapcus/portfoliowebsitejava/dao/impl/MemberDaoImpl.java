@@ -54,4 +54,24 @@ public class MemberDaoImpl implements MemberDao {
             return memberList.get(0);
         return null;
     }
+
+    @Override
+    public List<Member> getMembers(Integer limit, Integer offset) {
+        String sql = "SELECT member_id, avatar, name, email, password, created_date, auth " +
+                "FROM member WHERE 1 = 1 " +
+                "LIMIT :limit OFFSET :offset";
+        Map<String, Object> map = new HashMap<>();
+        map.put("limit", limit);
+        map.put("offset", offset);
+        List<Member> memberList = namedParameterJdbcTemplate.query(sql, map, new MemberRowMapper());
+        return memberList;
+    }
+
+    @Override
+    public Integer countProduct() {
+        String sql = "SELECT COUNT(member_id) FROM member WHERE 1=1";
+        Map<String, Object> map = new HashMap<>();
+        Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return count;
+    }
 }

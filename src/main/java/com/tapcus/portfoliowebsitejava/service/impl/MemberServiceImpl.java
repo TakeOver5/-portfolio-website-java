@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class MemberServiceImpl implements MemberService {
 
@@ -37,5 +39,16 @@ public class MemberServiceImpl implements MemberService {
         memberRegisterRequest.setPassword(pe.encode(memberRegisterRequest.getPassword()));
 
         return memberDao.createMember(memberRegisterRequest);
+    }
+
+    @Override
+    public List<Member> getMembers(Integer limit, Integer offset) {
+
+        return memberDao.getMembers(limit, offset);
+    }
+
+    @Override
+    public Integer countProduct() {
+        return memberDao.countProduct();
     }
 }

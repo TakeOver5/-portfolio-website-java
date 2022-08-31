@@ -1,18 +1,20 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
+import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.MemberService;
+import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,4 +44,18 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
+    @GetMapping("/members")
+    public ResponseEntity<Page<List<Member>>> getMembers(@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+                                                         @RequestParam(defaultValue = "0") @Min(0) Integer offset) {
+
+        List<Member> memberList = memberService.getMembers(limit, offset);
+        Integer total = memberService.countProduct();
+
+        Page<List<Member>> result = new Page<>(200, "操作成功", memberList);
+        result.setLimit(limit);
+        result.setOffset(offset);
+        result.setTotal(total);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 }
