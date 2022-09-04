@@ -31,11 +31,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         String password = member.getPassword();
         String authority = member.getAuth();
-        int memberId = member.getMemberId();
 
         return new MyUser(username,
                           password,
                           AuthorityUtils.commaSeparatedStringToAuthorityList(authority),
-                          memberId);
+                          member);
     }
 }

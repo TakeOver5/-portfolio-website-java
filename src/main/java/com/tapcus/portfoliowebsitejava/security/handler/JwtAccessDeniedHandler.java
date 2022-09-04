@@ -22,7 +22,8 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         // 權限不足
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         PrintWriter out = response.getWriter();
-        Result<String> failResult = Result.error("權限不足" , accessDeniedException.getMessage());
+        Result<String> failResult = Result.error("權限不足");
+        failResult.setCode(401);
         ObjectMapper om = new ObjectMapper();
         out.write(om.writeValueAsString(failResult));
         out.flush();

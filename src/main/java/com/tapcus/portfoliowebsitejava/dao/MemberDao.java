@@ -16,5 +16,5 @@ public interface MemberDao {
 
     Integer countProduct();
 
-    byte[] updateAvatar(String email, byte[] bytes);
+    byte[] updateAvatar(Integer memberId, byte[] bytes);
 }

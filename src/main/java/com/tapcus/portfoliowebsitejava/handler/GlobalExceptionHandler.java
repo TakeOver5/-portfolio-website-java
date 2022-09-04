@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
         log.error("參數驗證失敗 ---------------- {}", objectError.getDefaultMessage());
 
-        return Result.error("參數驗證失敗", objectError.getDefaultMessage());
+        return Result.error(objectError.getDefaultMessage());
     }
 
     // 400 - Bad Request 參數校驗異常
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
         log.error("參數校驗異常 ---------------- {}", e.getMessage());
 
-        return Result.error("參數校驗異常",e.getMessage());
+        return Result.error(e.getReason());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

@@ -76,13 +76,13 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public byte[] updateAvatar(String email, byte[] image) {
+    public byte[] updateAvatar(Integer memberId, byte[] image) {
         String sql = "UPDATE member SET " +
                 "avatar = :avatar " +
-                "where email = :email";
+                "where member_id = :memberId";
         Map<String, Object> map = new HashMap<>();
         map.put("avatar", image);
-        map.put("email", email);
+        map.put("memberId", memberId);
         namedParameterJdbcTemplate.update(sql, map);
         return image;
     }

@@ -19,7 +19,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
     public void onAuthenticationFailure(HttpServletRequest res, HttpServletResponse resp, AuthenticationException e) throws IOException, ServletException {
         resp.setContentType("application/json;charset=UTF-8");
         PrintWriter out = resp.getWriter();
-        Result<String> failResult = Result.error("登入失敗", e.getMessage());
+        Result<String> failResult = Result.error("登入失敗");
         ObjectMapper om = new ObjectMapper();
         out.write(om.writeValueAsString(failResult));
         out.flush();

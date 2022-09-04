@@ -1,10 +1,14 @@
 package com.tapcus.portfoliowebsitejava.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.security.component.MyUser;
 import com.tapcus.portfoliowebsitejava.util.JwtUtils;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -34,13 +38,24 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         String jwt = jwtUtils.generateToken(authentication.getName());
         resp.setHeader(jwtUtils.getHeader(), jwt);
 
+        // 取得登入資料
+        Object object = authentication.getPrincipal();
+        MyUser myuser = (MyUser) object;
+        Member member = myuser.getMember();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberId", member.getMemberId());
+        result.put("name", member.getName());
+        result.put("email", member.getEmail());
+        result.put("avatar", member.getAvatar());
+
         // 權限回顯
         Collection collection = authentication.getAuthorities();
         String authority = collection.iterator().next().toString();
-        Map<String, String> result = new HashMap<>();
         result.put("authority", authority);
 
-        Result<Map<String, String>> succResult = Result.success(result);
+        Result<Map<String, Object>> succResult = Result.success(result);
+        succResult.setMessage("登入成功");
 
         // 寫入
         ObjectMapper om = new ObjectMapper();

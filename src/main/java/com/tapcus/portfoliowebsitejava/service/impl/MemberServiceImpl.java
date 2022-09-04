@@ -57,8 +57,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public byte[] updateAvatar(String email, MultipartFile file) throws IOException {
+    public byte[] updateAvatar(Integer memberId, MultipartFile file) throws IOException {
         byte[] bytes = FileCopyUtils.copyToByteArray(file.getInputStream());
-        return memberDao.updateAvatar(email, bytes);
+        return memberDao.updateAvatar(memberId, bytes);
     }
 }

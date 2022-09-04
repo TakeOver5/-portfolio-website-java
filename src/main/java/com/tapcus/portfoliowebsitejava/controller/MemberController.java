@@ -84,7 +84,7 @@ public class MemberController {
         if(height > 200 || width > 200)
             throw new IOException("圖片大小不正確");
 
-        byte[] avatar = memberService.updateAvatar(principal.getName(), file);
+        byte[] avatar = memberService.updateAvatar(userDetails.getMemberId(), file);
 
         Map<String, Object> map = new HashMap<>();
         map.put("avatar", avatar);

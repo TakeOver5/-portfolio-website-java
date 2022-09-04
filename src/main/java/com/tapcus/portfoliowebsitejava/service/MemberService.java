@@ -15,5 +15,5 @@ public interface MemberService {
 
     Integer countProduct();
 
-    byte[] updateAvatar(String email, MultipartFile file) throws IOException;
+    byte[] updateAvatar(Integer memberId, MultipartFile file) throws IOException;
 }

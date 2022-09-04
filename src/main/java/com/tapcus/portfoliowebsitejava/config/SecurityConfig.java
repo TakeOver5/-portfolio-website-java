@@ -54,7 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] URL_USER = {
             "/welcome",
-            "/avatar/**"
+    };
+
+    private static final String[] URL_ADMIN = {
+    };
+
+    private static final String[] URL_MEMBER = {
+            "/avatar",
     };
 
     @Override
@@ -75,7 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/login").permitAll()
                 .antMatchers(URL_USER).hasRole("user")
-                .antMatchers("/members").hasRole("admin")
+                .antMatchers(URL_ADMIN).hasRole("admin")
+                .antMatchers(URL_MEMBER).hasAnyRole("user", "admin")
                 .antMatchers(URL_WHITELIST).permitAll()
                 .and()
                 // 登出配置
