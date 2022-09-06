@@ -44,6 +44,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
 
+    @Override
+    public Integer uploadMessage(Integer articleId, Integer memberId, String content) {
+        return articleDao.createMessage(articleId, memberId, content);
+    }
+
     // 上傳整合
     public String upload(MultipartFile multipartFile) throws IOException {
         String fileName = null;

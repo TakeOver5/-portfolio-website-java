@@ -40,4 +40,25 @@ public class ArticleDaoImpl implements ArticleDao {
 
         return articleId;
     }
+
+    @Override
+    public Integer createMessage(Integer articleId, Integer memberId, String content) {
+        String sql = "INSERT INTO message(article_id, member_id, content) " +
+                "VALUES (:article_id, :member_id, :content)";
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("article_id", articleId);
+        map.put("member_id", memberId);
+        map.put("content", content);
+
+        // 取得自增鍵
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
+
+        int messageId = keyHolder.getKey().intValue();
+
+        return messageId;
+    }
 }

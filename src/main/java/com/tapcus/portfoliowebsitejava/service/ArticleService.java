@@ -13,10 +13,12 @@ import javax.validation.constraints.Pattern;
 import java.io.IOException;
 
 public interface ArticleService {
-    public Integer uploadArticle(Integer memberId,
-                                 String title,
-                                 String introduction,
-                                 String content,
-                                 MultipartFile cover,
-                                 String git_file_path) throws IOException;
+    Integer uploadArticle(Integer memberId,
+                          String title,
+                          String introduction,
+                          String content,
+                          MultipartFile cover,
+                          String git_file_path) throws IOException;
+
+    Integer uploadMessage(Integer articleId, Integer memberId, String content);
 }

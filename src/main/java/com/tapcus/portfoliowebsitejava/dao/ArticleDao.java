@@ -8,4 +8,6 @@ public interface ArticleDao {
                           String content,
                           String coverUrl,
                           String git_file_path);
+
+    Integer createMessage(Integer articleId, Integer memberId, String content);
 }

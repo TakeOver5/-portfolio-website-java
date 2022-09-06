@@ -1,16 +1,14 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
-import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
+import com.tapcus.portfoliowebsitejava.dto.AddMessageRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
-import com.tapcus.portfoliowebsitejava.service.MemberService;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +21,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,5 +71,25 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.OK).body(r);
 
+    }
+
+    @Validated
+    @PostMapping("/article/{articleId}/message")
+    public ResponseEntity<Result<Map<String, Object>>> uploadMessage(@PathVariable Integer articleId,
+                                                                     @RequestBody @Valid AddMessageRequest addMessageRequest) {
+
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = (Member) object;
+        Integer memberId = member.getMemberId();
+
+        Integer messageId = articleService.uploadMessage(articleId, memberId, addMessageRequest.getContent());
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("messageId", messageId);
+
+        Result<Map<String, Object>> r = new Result<>(200, "上傳成功", map);
+
+        return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 }
