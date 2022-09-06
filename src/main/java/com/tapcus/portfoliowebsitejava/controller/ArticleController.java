@@ -70,7 +70,7 @@ public class ArticleController {
         Map<String, Object> map = new HashMap<>();
         map.put("articleId", articleId);
 
-        Result<Map<String, Object>> r = new Result<>(200, "更新成功", map);
+        Result<Map<String, Object>> r = new Result<>(200, "上傳成功", map);
 
         return ResponseEntity.status(HttpStatus.OK).body(r);
 
