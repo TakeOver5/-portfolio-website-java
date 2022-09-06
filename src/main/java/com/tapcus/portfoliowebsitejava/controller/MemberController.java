@@ -55,11 +55,8 @@ public class MemberController {
     }
 
     @PostMapping("/avatar")
-    public ResponseEntity<Result<Object>> updateAvatar(@RequestParam("file") MultipartFile file,
-                                                       Principal principal) throws IOException {
+    public ResponseEntity<Result<Object>> updateAvatar(@RequestParam("file") MultipartFile file) throws IOException {
 
-        /* 挖 id 出來 */
-        SecurityContext securityContext = SecurityContextHolder.getContext();
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member userDetails = (Member) object;
         log.info("username --- {}", userDetails.getMemberId());
