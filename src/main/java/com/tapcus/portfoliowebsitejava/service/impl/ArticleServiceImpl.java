@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
+import com.tapcus.portfoliowebsitejava.model.Article;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.UUID;
 
 import static com.google.cloud.storage.BlobInfo.newBuilder;
@@ -47,6 +49,16 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Integer uploadMessage(Integer articleId, Integer memberId, String content) {
         return articleDao.createMessage(articleId, memberId, content);
+    }
+
+    @Override
+    public List<Article> getArticles(Integer limit, Integer offset) {
+        return articleDao.getArticles(limit, offset);
+    }
+
+    @Override
+    public Integer countArticle() {
+        return articleDao.countArticle();
     }
 
     // 上傳整合

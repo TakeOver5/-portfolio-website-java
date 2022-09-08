@@ -68,7 +68,7 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public Integer countProduct() {
+    public Integer countMember() {
         String sql = "SELECT COUNT(member_id) FROM member WHERE 1=1";
         Map<String, Object> map = new HashMap<>();
         Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);

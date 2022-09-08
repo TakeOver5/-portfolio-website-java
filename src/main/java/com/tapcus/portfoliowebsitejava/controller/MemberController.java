@@ -51,7 +51,7 @@ public class MemberController {
         r.setMessage("創建成功");
         r.setData(map);
 
-        return ResponseEntity.status(HttpStatus.OK).body(r);
+        return ResponseEntity.status(HttpStatus.CREATED).body(r);
     }
 
     @PostMapping("/avatar")
@@ -88,7 +88,7 @@ public class MemberController {
 
         Result<Object> r = new Result<>(200, "更新成功", map);
 
-        return ResponseEntity.status(HttpStatus.OK).body(r);
+        return ResponseEntity.status(HttpStatus.CREATED).body(r);
     }
 
     @GetMapping("/members")
@@ -96,7 +96,7 @@ public class MemberController {
                                                          @RequestParam(defaultValue = "0") @Min(0) Integer offset) {
 
         List<Member> memberList = memberService.getMembers(limit, offset);
-        Integer total = memberService.countProduct();
+        Integer total = memberService.countMember();
 
         Page<List<Member>> result = new Page<>(200, "操作成功", memberList);
         result.setLimit(limit);

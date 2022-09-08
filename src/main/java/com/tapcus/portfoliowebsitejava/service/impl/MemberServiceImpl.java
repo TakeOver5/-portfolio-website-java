@@ -52,8 +52,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Integer countProduct() {
-        return memberDao.countProduct();
+    public Integer countMember() {
+        return memberDao.countMember();
     }
 
     @Override

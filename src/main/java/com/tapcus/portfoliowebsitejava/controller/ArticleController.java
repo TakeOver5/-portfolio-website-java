@@ -1,8 +1,11 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
 import com.tapcus.portfoliowebsitejava.dto.AddMessageRequest;
+import com.tapcus.portfoliowebsitejava.dto.IndexArticleResponse;
+import com.tapcus.portfoliowebsitejava.model.Article;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
+import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.validator.constraints.Length;
@@ -16,12 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -91,5 +94,30 @@ public class ArticleController {
         Result<Map<String, Object>> r = new Result<>(200, "上傳成功", map);
 
         return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
+    @GetMapping("/articles")
+    public ResponseEntity<Page<List<IndexArticleResponse>>> getArticles(@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+                                                          @RequestParam(defaultValue = "0") @Min(0) Integer offset) {
+
+        List<Article> articleList = articleService.getArticles(limit, offset);
+        List<IndexArticleResponse> iarList = new ArrayList<>();
+
+        for(Article article : articleList) {
+            IndexArticleResponse iar = new IndexArticleResponse();
+            iar.setArticle_id(article.getArticleId());
+            iar.setTitle(article.getTitle());
+            iar.setIntroduction(article.getIntroduction());
+            iar.setCover_path(article.getCoverPath());
+            iarList.add(iar);
+        }
+
+        Integer total = articleService.countArticle();
+
+        Page<List<IndexArticleResponse>> result = new Page<>(200, "獲取成功", iarList);
+        result.setLimit(limit);
+        result.setOffset(offset);
+        result.setTotal(total);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

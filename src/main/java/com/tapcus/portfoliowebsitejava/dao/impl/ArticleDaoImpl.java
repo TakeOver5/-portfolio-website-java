@@ -1,6 +1,10 @@
 package com.tapcus.portfoliowebsitejava.dao.impl;
 
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
+import com.tapcus.portfoliowebsitejava.model.Article;
+import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.rowmapper.ArticleRowMapper;
+import com.tapcus.portfoliowebsitejava.rowmapper.MemberRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -60,5 +65,25 @@ public class ArticleDaoImpl implements ArticleDao {
         int messageId = keyHolder.getKey().intValue();
 
         return messageId;
+    }
+
+    @Override
+    public List<Article> getArticles(Integer limit, Integer offset) {
+        String sql = "SELECT * " +
+                "FROM article WHERE 1 = 1 " +
+                "LIMIT :limit OFFSET :offset";
+        Map<String, Object> map = new HashMap<>();
+        map.put("limit", limit);
+        map.put("offset", offset);
+        List<Article> articleList = namedParameterJdbcTemplate.query(sql, map, new ArticleRowMapper());
+        return articleList;
+    }
+
+    @Override
+    public Integer countArticle() {
+        String sql = "SELECT COUNT(article_id) FROM article WHERE 1=1";
+        Map<String, Object> map = new HashMap<>();
+        Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return count;
     }
 }

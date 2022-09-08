@@ -14,7 +14,7 @@ public interface MemberDao {
 
     List<Member> getMembers(Integer limit, Integer offset);
 
-    Integer countProduct();
+    Integer countMember();
 
     byte[] updateAvatar(Integer memberId, byte[] bytes);
 }

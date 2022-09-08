@@ -13,7 +13,7 @@ public interface MemberService {
 
     List<Member> getMembers(Integer limit, Integer offset);
 
-    Integer countProduct();
+    Integer countMember();
 
     byte[] updateAvatar(Integer memberId, MultipartFile file) throws IOException;
 }
