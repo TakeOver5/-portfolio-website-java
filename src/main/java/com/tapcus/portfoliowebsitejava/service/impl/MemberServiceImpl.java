@@ -2,6 +2,7 @@ package com.tapcus.portfoliowebsitejava.service.impl;
 
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
+import com.tapcus.portfoliowebsitejava.dto.ChangePasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.IndexArticleResponse;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Article;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -102,5 +104,32 @@ public class MemberServiceImpl implements MemberService {
         memberInfo.setArticles(iarList);
 
         return memberInfo;
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest cpr) {
+
+        if(cpr.getOldPassword().equals(cpr.getNewPassword())) {
+            return "輸入新舊密碼一致";
+        }
+
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = (Member) object;
+
+        PasswordEncoder pe = new BCryptPasswordEncoder();
+        boolean matches = pe.matches(cpr.getOldPassword(), member.getPassword());
+
+        if(!matches) {
+            return "輸入的舊密碼與用戶密碼不匹配";
+        }
+
+        matches = pe.matches(cpr.getNewPassword(), member.getPassword());
+        if(matches) {
+            return "輸入的新密碼與用戶密碼一樣";
+        }
+
+        memberDao.changePasswordByMemberId(member.getMemberId(), pe.encode(cpr.getNewPassword()));
+
+        return "修改成功";
     }
 }

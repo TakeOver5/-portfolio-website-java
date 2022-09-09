@@ -1,5 +1,6 @@
 package com.tapcus.portfoliowebsitejava.service;
 
+import com.tapcus.portfoliowebsitejava.dto.ChangePasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.model.MemberInfo;
@@ -21,4 +22,6 @@ public interface MemberService {
     String setAuth(Integer memberId, Integer auth);
 
     MemberInfo getMemberInfo(Integer memberId);
+
+    String changePassword(ChangePasswordRequest cpr);
 }

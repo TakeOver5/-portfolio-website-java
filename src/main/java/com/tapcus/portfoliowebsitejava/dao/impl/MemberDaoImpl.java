@@ -120,4 +120,15 @@ public class MemberDaoImpl implements MemberDao {
         Member member = namedParameterJdbcTemplate.queryForObject(sql, map, new MemberRowMapper());
         return member;
     }
+
+    @Override
+    public void changePasswordByMemberId(Integer memberId, String newPassword) {
+        String sql = "UPDATE member SET " +
+                "password = :newPassword " +
+                "where member_id = :memberId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("newPassword", newPassword);
+        map.put("memberId", memberId);
+        namedParameterJdbcTemplate.update(sql, map);
+    }
 }

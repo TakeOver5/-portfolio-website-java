@@ -1,5 +1,6 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
+import com.tapcus.portfoliowebsitejava.dto.ChangePasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.model.MemberInfo;
@@ -8,11 +9,13 @@ import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +23,7 @@ import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -119,6 +123,16 @@ public class MemberController {
     public ResponseEntity<Result<MemberInfo>> getMemberInfo(@PathVariable Integer memberId) {
         MemberInfo memberInfo = memberService.getMemberInfo(memberId);
         Result<MemberInfo> r = new Result<>(200, "操作成功", memberInfo);
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
+
+    @Validated
+    @PostMapping("/member/changepw")
+    public ResponseEntity<Result<Null>> changePassword(@RequestBody @Valid ChangePasswordRequest cpr) {
+
+        String message = memberService.changePassword(cpr);
+        Result<Null> r = new Result<>(200, message);
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
