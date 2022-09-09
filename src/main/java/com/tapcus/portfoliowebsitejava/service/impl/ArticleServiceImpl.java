@@ -10,6 +10,7 @@ import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
 import com.tapcus.portfoliowebsitejava.model.Article;
 import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
+import com.tapcus.portfoliowebsitejava.model.ArticleSimple;
 import com.tapcus.portfoliowebsitejava.model.MessageDetail;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import lombok.Data;
@@ -64,12 +65,27 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Integer countArticleAll() {
+        return articleDao.countArticleAll();
+    }
+
+    @Override
     public ArticleDetail getArticle(Integer articleId) {
 
         ArticleDetail articleDetail = articleDao.getArticle(articleId);
         List<MessageDetail> messageDetailList = articleDao.getMessage(articleId);
         articleDetail.setMessageDetail(messageDetailList);
         return articleDetail;
+    }
+
+    @Override
+    public List<ArticleSimple> getArticlesSimple(Integer limit, Integer offset) {
+        return articleDao.getArticlesSimple(limit, offset);
+    }
+
+    @Override
+    public void setViewable(Integer articleId, Integer view) {
+        articleDao.setViewable(articleId, view);
     }
 
     // 上傳整合

@@ -4,6 +4,7 @@ import com.tapcus.portfoliowebsitejava.dto.AddMessageRequest;
 import com.tapcus.portfoliowebsitejava.dto.IndexArticleResponse;
 import com.tapcus.portfoliowebsitejava.model.Article;
 import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
+import com.tapcus.portfoliowebsitejava.model.ArticleSimple;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import com.tapcus.portfoliowebsitejava.util.Page;
@@ -128,4 +129,29 @@ public class ArticleController {
         result.setTotal(total);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
+    @GetMapping("/articles/simple")
+    public ResponseEntity<Page<List<ArticleSimple>>> getArticlesSimple(@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+                                                                       @RequestParam(defaultValue = "0") @Min(0) Integer offset) {
+
+        List<ArticleSimple> articleSimples = articleService.getArticlesSimple(limit, offset);
+
+        Integer total = articleService.countArticleAll();
+
+        Page<List<ArticleSimple>> result = new Page<>(200, "獲取成功", articleSimples);
+        result.setLimit(limit);
+        result.setOffset(offset);
+        result.setTotal(total);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/article/{articleId}/viewable")
+    public ResponseEntity<Result<Null>> setViewable(@PathVariable Integer articleId,
+                                                    @RequestParam(defaultValue = "0") @Max(1) @Min(0) Integer view) {
+        articleService.setViewable(articleId, view);
+        Result<Null> r = new Result<>(200, "修改成功");
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
 }

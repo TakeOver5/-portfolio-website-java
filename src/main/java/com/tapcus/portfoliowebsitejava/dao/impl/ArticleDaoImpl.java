@@ -1,14 +1,8 @@
 package com.tapcus.portfoliowebsitejava.dao.impl;
 
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
-import com.tapcus.portfoliowebsitejava.model.Article;
-import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
-import com.tapcus.portfoliowebsitejava.model.Member;
-import com.tapcus.portfoliowebsitejava.model.MessageDetail;
-import com.tapcus.portfoliowebsitejava.rowmapper.ArticleDetailRowMapper;
-import com.tapcus.portfoliowebsitejava.rowmapper.ArticleRowMapper;
-import com.tapcus.portfoliowebsitejava.rowmapper.MemberRowMapper;
-import com.tapcus.portfoliowebsitejava.rowmapper.MessageDetailRowMapper;
+import com.tapcus.portfoliowebsitejava.model.*;
+import com.tapcus.portfoliowebsitejava.rowmapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -91,6 +85,13 @@ public class ArticleDaoImpl implements ArticleDao {
         return count;
     }
 
+    public Integer countArticleAll() {
+        String sql = "SELECT COUNT(article_id) FROM article WHERE 1=1 ";
+        Map<String, Object> map = new HashMap<>();
+        Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return count;
+    }
+
     @Override
     public ArticleDetail getArticle(Integer articleId) {
 
@@ -125,5 +126,29 @@ public class ArticleDaoImpl implements ArticleDao {
         List<MessageDetail> messageDetailList = namedParameterJdbcTemplate.query(sql, map, new MessageDetailRowMapper());
 
         return messageDetailList;
+    }
+
+    @Override
+    public List<ArticleSimple> getArticlesSimple(Integer limit, Integer offset) {
+        String sql = "SELECT a.article_id, a.title, a.created_date, a.viewable, m.name, m.avatar, m.email " +
+                "FROM article as a " +
+                "LEFT JOIN member as m ON a.member_id = m.member_id " +
+                "LIMIT :limit OFFSET :offset";
+        Map<String, Object> map = new HashMap<>();
+        map.put("limit", limit);
+        map.put("offset", offset);
+        List<ArticleSimple> articleSimples = namedParameterJdbcTemplate.query(sql, map, new ArticleSimpleRowMapper());
+        return articleSimples;
+    }
+
+    @Override
+    public void setViewable(Integer articleId, Integer view) {
+        String sql = "UPDATE article SET " +
+                "viewable = :view " +
+                "where article_id = :articleId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("view", view);
+        map.put("articleId", articleId);
+        namedParameterJdbcTemplate.update(sql, map);
     }
 }
