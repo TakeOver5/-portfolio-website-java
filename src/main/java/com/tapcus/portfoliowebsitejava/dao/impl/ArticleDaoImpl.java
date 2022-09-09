@@ -2,9 +2,13 @@ package com.tapcus.portfoliowebsitejava.dao.impl;
 
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.model.Article;
+import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
 import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.model.MessageDetail;
+import com.tapcus.portfoliowebsitejava.rowmapper.ArticleDetailRowMapper;
 import com.tapcus.portfoliowebsitejava.rowmapper.ArticleRowMapper;
 import com.tapcus.portfoliowebsitejava.rowmapper.MemberRowMapper;
+import com.tapcus.portfoliowebsitejava.rowmapper.MessageDetailRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -70,7 +74,7 @@ public class ArticleDaoImpl implements ArticleDao {
     @Override
     public List<Article> getArticles(Integer limit, Integer offset) {
         String sql = "SELECT * " +
-                "FROM article WHERE 1 = 1 " +
+                "FROM article WHERE 1=1 AND viewable=true " +
                 "LIMIT :limit OFFSET :offset";
         Map<String, Object> map = new HashMap<>();
         map.put("limit", limit);
@@ -81,9 +85,45 @@ public class ArticleDaoImpl implements ArticleDao {
 
     @Override
     public Integer countArticle() {
-        String sql = "SELECT COUNT(article_id) FROM article WHERE 1=1";
+        String sql = "SELECT COUNT(article_id) FROM article WHERE 1=1 AND viewable=true ";
         Map<String, Object> map = new HashMap<>();
         Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
         return count;
+    }
+
+    @Override
+    public ArticleDetail getArticle(Integer articleId) {
+
+        String sql = "SELECT a.article_id, a.title, a.introduction, a.content, a.cover_path, a.last_modified_date, a.git_file_path, m.avatar, m.name " +
+                "FROM article as a " +
+                "LEFT JOIN member as m ON a.member_id = m.member_id " +
+                "WHERE a.article_id = :articleId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("articleId", articleId);
+
+        List<ArticleDetail> articleDetailsList = namedParameterJdbcTemplate.query(sql, map, new ArticleDetailRowMapper());
+
+
+        if(articleDetailsList.size() > 0)
+            return articleDetailsList.get(0);
+        else
+            return null;
+    }
+
+    @Override
+    public List<MessageDetail> getMessage(Integer articleId) {
+
+        String sql = "SELECT mg.message_id, mg.content, mg.created_date, m.avatar, m.name " +
+                "FROM message as mg " +
+                "LEFT JOIN member as m ON mg.member_id = m.member_id " +
+                "WHERE mg.article_id = :articleId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("articleId", articleId);
+
+        List<MessageDetail> messageDetailList = namedParameterJdbcTemplate.query(sql, map, new MessageDetailRowMapper());
+
+        return messageDetailList;
     }
 }

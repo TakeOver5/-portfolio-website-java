@@ -9,6 +9,8 @@ import com.google.firebase.cloud.StorageClient;
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
 import com.tapcus.portfoliowebsitejava.model.Article;
+import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
+import com.tapcus.portfoliowebsitejava.model.MessageDetail;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,15 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Integer countArticle() {
         return articleDao.countArticle();
+    }
+
+    @Override
+    public ArticleDetail getArticle(Integer articleId) {
+
+        ArticleDetail articleDetail = articleDao.getArticle(articleId);
+        List<MessageDetail> messageDetailList = articleDao.getMessage(articleId);
+        articleDetail.setMessageDetail(messageDetailList);
+        return articleDetail;
     }
 
     // 上傳整合

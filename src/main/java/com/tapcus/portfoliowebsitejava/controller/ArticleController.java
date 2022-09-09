@@ -3,6 +3,7 @@ package com.tapcus.portfoliowebsitejava.controller;
 import com.tapcus.portfoliowebsitejava.dto.AddMessageRequest;
 import com.tapcus.portfoliowebsitejava.dto.IndexArticleResponse;
 import com.tapcus.portfoliowebsitejava.model.Article;
+import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import com.tapcus.portfoliowebsitejava.util.Page;
@@ -74,6 +75,13 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.OK).body(r);
 
+    }
+
+    @GetMapping("/article/{articleId}")
+    public ResponseEntity<Result<ArticleDetail>> getArticle(@PathVariable Integer articleId) {
+        ArticleDetail articleDetail = articleService.getArticle(articleId);
+        Result<ArticleDetail> r = new Result<>(200, "獲取成功",articleDetail);
+        return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
     @Validated

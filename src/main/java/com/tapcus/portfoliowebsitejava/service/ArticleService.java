@@ -1,6 +1,7 @@
 package com.tapcus.portfoliowebsitejava.service;
 
 import com.tapcus.portfoliowebsitejava.model.Article;
+import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
@@ -27,4 +28,6 @@ public interface ArticleService {
     List<Article> getArticles(Integer limit, Integer offset);
 
     Integer countArticle();
+
+    ArticleDetail getArticle(Integer articleId);
 }
