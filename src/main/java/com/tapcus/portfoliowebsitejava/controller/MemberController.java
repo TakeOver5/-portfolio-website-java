@@ -2,6 +2,7 @@ package com.tapcus.portfoliowebsitejava.controller;
 
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.model.MemberInfo;
 import com.tapcus.portfoliowebsitejava.service.MemberService;
 import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
@@ -19,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Null;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.Principal;
@@ -54,7 +56,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(r);
     }
 
-    @PostMapping("/avatar")
+    @PostMapping("member/avatar")
     public ResponseEntity<Result<Object>> updateAvatar(@RequestParam("file") MultipartFile file) throws IOException {
 
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -104,4 +106,20 @@ public class MemberController {
         result.setTotal(total);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
+    @GetMapping("/member/{memberId}/auth")
+    public ResponseEntity<Result<Null>> setAuth(@PathVariable Integer memberId,
+                                                @RequestParam(defaultValue = "0") @Max(1) @Min(0) Integer auth) {
+        String message = memberService.setAuth(memberId, auth);
+        Result<Null> r = new Result<>(200, message);
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
+    @GetMapping("/member/{memberId}/info")
+    public ResponseEntity<Result<MemberInfo>> getMemberInfo(@PathVariable Integer memberId) {
+        MemberInfo memberInfo = memberService.getMemberInfo(memberId);
+        Result<MemberInfo> r = new Result<>(200, "操作成功", memberInfo);
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
 }

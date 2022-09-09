@@ -2,6 +2,7 @@ package com.tapcus.portfoliowebsitejava.dao;
 
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.model.MemberInfo;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface MemberDao {
     Integer countMember();
 
     byte[] updateAvatar(Integer memberId, byte[] bytes);
+
+    void setAuth(Integer memberId, String authName);
+
+    String getAuth(Integer memberId);
+
+    Member getMemberInfo(Integer memberId);
 }

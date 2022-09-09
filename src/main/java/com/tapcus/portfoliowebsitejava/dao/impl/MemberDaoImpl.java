@@ -3,6 +3,7 @@ package com.tapcus.portfoliowebsitejava.dao.impl;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.model.MemberInfo;
 import com.tapcus.portfoliowebsitejava.rowmapper.MemberRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -85,5 +86,38 @@ public class MemberDaoImpl implements MemberDao {
         map.put("memberId", memberId);
         namedParameterJdbcTemplate.update(sql, map);
         return image;
+    }
+
+    @Override
+    public void setAuth(Integer memberId, String authName) {
+        String sql = "UPDATE member SET " +
+                "auth = :authName " +
+                "where member_id = :memberId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("authName", authName);
+        map.put("memberId", memberId);
+        namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    @Override
+    public String getAuth(Integer memberId) {
+        String sql = "SELECT auth " +
+                "FROM member WHERE member_id = :memberId ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        String auth = namedParameterJdbcTemplate.queryForObject(sql, map, String.class);
+        return auth;
+    }
+
+    @Override
+    public Member getMemberInfo(Integer memberId) {
+        String sql = "SELECT * " +
+                "FROM member WHERE member_id = :memberId ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        Member member = namedParameterJdbcTemplate.queryForObject(sql, map, new MemberRowMapper());
+        return member;
     }
 }

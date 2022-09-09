@@ -26,6 +26,8 @@ public interface ArticleDao {
 
     ArticleDetail getArticle(Integer articleId);
 
+    List<Article> getArticleByMemberId(Integer memberId);
+
     List<MessageDetail> getMessage(Integer articleId);
 
     List<ArticleSimple> getArticlesSimple(Integer limit, Integer offset);

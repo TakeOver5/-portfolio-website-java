@@ -2,6 +2,7 @@ package com.tapcus.portfoliowebsitejava.service;
 
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
+import com.tapcus.portfoliowebsitejava.model.MemberInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,4 +17,8 @@ public interface MemberService {
     Integer countMember();
 
     byte[] updateAvatar(Integer memberId, MultipartFile file) throws IOException;
+
+    String setAuth(Integer memberId, Integer auth);
+
+    MemberInfo getMemberInfo(Integer memberId);
 }

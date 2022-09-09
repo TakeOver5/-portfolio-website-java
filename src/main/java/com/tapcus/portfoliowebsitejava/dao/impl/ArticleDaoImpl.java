@@ -113,6 +113,20 @@ public class ArticleDaoImpl implements ArticleDao {
     }
 
     @Override
+    public List<Article> getArticleByMemberId(Integer memberId) {
+        String sql = "SELECT * " +
+                "FROM article " +
+                "WHERE member_id = :memberId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+
+        List<Article> articleList = namedParameterJdbcTemplate.query(sql, map, new ArticleRowMapper());
+
+        return articleList;
+    }
+
+    @Override
     public List<MessageDetail> getMessage(Integer articleId) {
 
         String sql = "SELECT mg.message_id, mg.content, mg.created_date, m.avatar, m.name " +
