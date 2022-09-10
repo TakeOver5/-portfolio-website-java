@@ -1,10 +1,12 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
 import com.tapcus.portfoliowebsitejava.dto.ChangePasswordRequest;
+import com.tapcus.portfoliowebsitejava.dto.ForgetPasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
 import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.model.MemberInfo;
 import com.tapcus.portfoliowebsitejava.service.MemberService;
+import com.tapcus.portfoliowebsitejava.service.impl.EmailSenderService;
 import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,8 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private EmailSenderService senderService;
 
     @GetMapping("/welcome")
     public String welcome() {
@@ -112,10 +116,10 @@ public class MemberController {
     }
 
     @GetMapping("/member/{memberId}/auth")
-    public ResponseEntity<Result<Null>> setAuth(@PathVariable Integer memberId,
+    public ResponseEntity<Result<Object>> setAuth(@PathVariable Integer memberId,
                                                 @RequestParam(defaultValue = "0") @Max(1) @Min(0) Integer auth) {
         String message = memberService.setAuth(memberId, auth);
-        Result<Null> r = new Result<>(200, message);
+        Result<Object> r = new Result<>(200, message);
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
@@ -129,11 +133,18 @@ public class MemberController {
 
     @Validated
     @PostMapping("/member/changepw")
-    public ResponseEntity<Result<Null>> changePassword(@RequestBody @Valid ChangePasswordRequest cpr) {
+    public ResponseEntity<Result<Object>> changePassword(@RequestBody @Valid ChangePasswordRequest cpr) {
 
         String message = memberService.changePassword(cpr);
-        Result<Null> r = new Result<>(200, message);
+        Result<Object> r = new Result<>(200, message);
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
+    @Validated
+    @PostMapping("/forgotpw")
+    public ResponseEntity<Result<Object>> sendMail(@RequestBody @Valid ForgetPasswordRequest fpr) {
+        Result<Object> r = senderService.sendEmail(fpr.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
 }
