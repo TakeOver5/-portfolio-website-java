@@ -146,7 +146,7 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/article/{articleId}/viewable")
+    @PostMapping("/article/{articleId}/viewable")
     public ResponseEntity<Result<Null>> setViewable(@PathVariable Integer articleId,
                                                     @RequestParam(defaultValue = "0") @Max(1) @Min(0) Integer view) {
         articleService.setViewable(articleId, view);

@@ -8,9 +8,10 @@ import java.util.Date;
 public class ArticleSimple {
     private Integer articleId;
     private String title;
-    private Date createdDate;
-    private boolean viewable;
-    private String name;
+    private Integer memberId;
     private byte[] avatar;
+    private String name;
     private String email;
+    private Date lastModifiedDate;
+    private boolean viewable;
 }

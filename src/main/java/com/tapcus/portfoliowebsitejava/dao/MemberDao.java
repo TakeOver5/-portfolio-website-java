@@ -26,4 +26,8 @@ public interface MemberDao {
     Member getMemberInfo(Integer memberId);
 
     void changePasswordByMemberId(Integer memberId, String newPassword);
+
+    void setName(Integer memberId, String name);
+
+    String checkName(String name);
 }

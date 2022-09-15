@@ -144,7 +144,7 @@ public class ArticleDaoImpl implements ArticleDao {
 
     @Override
     public List<ArticleSimple> getArticlesSimple(Integer limit, Integer offset) {
-        String sql = "SELECT a.article_id, a.title, a.created_date, a.viewable, m.name, m.avatar, m.email " +
+        String sql = "SELECT a.article_id, a.title, a.last_modified_date, a.viewable, m.member_id ,m.name, m.avatar, m.email " +
                 "FROM article as a " +
                 "LEFT JOIN member as m ON a.member_id = m.member_id " +
                 "LIMIT :limit OFFSET :offset";

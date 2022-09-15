@@ -1,5 +1,6 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
+import com.tapcus.portfoliowebsitejava.dto.ChangeNameRequest;
 import com.tapcus.portfoliowebsitejava.dto.ChangePasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.ForgetPasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
@@ -115,7 +116,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/member/{memberId}/auth")
+    @PostMapping("/member/{memberId}/auth")
     public ResponseEntity<Result<Object>> setAuth(@PathVariable Integer memberId,
                                                 @RequestParam(defaultValue = "0") @Max(1) @Min(0) Integer auth) {
         String message = memberService.setAuth(memberId, auth);
@@ -136,7 +137,11 @@ public class MemberController {
     public ResponseEntity<Result<Object>> changePassword(@RequestBody @Valid ChangePasswordRequest cpr) {
 
         String message = memberService.changePassword(cpr);
-        Result<Object> r = new Result<>(200, message);
+        int code = 200;
+        if(message.equals("輸入的舊密碼與用戶密碼不匹配")) {
+            code = 404;
+        }
+        Result<Object> r = new Result<>(code, message);
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
@@ -145,6 +150,16 @@ public class MemberController {
     public ResponseEntity<Result<Object>> sendMail(@RequestBody @Valid ForgetPasswordRequest fpr) {
         Result<Object> r = senderService.sendEmail(fpr.getEmail());
 
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
+    @PostMapping("/member/changename")
+    public ResponseEntity<Result<Object>> changeName(@RequestBody @Valid ChangeNameRequest cnr) {
+        String message = memberService.changeName(cnr);
+        int code = 200;
+        if(message.equals("暱稱重覆")) code = 400;
+        else if (message.equals("查無此帳號")) code = 404;
+        Result<Object> r = new Result<>(code, message);
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 }

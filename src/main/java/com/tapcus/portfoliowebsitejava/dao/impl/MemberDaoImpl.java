@@ -131,4 +131,31 @@ public class MemberDaoImpl implements MemberDao {
         map.put("memberId", memberId);
         namedParameterJdbcTemplate.update(sql, map);
     }
+
+    @Override
+    public void setName(Integer memberId, String name) {
+        String sql = "UPDATE member SET " +
+                "name = :name " +
+                "where member_id = :memberId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("memberId", memberId);
+        namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    @Override
+    public String checkName(String name) {
+        String sql = "SELECT name " +
+                "FROM member WHERE name = :name ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        try {
+            String member = namedParameterJdbcTemplate.queryForObject(sql, map, String.class);
+            return member;
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 }

@@ -2,6 +2,7 @@ package com.tapcus.portfoliowebsitejava.service.impl;
 
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
+import com.tapcus.portfoliowebsitejava.dto.ChangeNameRequest;
 import com.tapcus.portfoliowebsitejava.dto.ChangePasswordRequest;
 import com.tapcus.portfoliowebsitejava.dto.IndexArticleResponse;
 import com.tapcus.portfoliowebsitejava.dto.MemberRegisterRequest;
@@ -90,6 +91,7 @@ public class MemberServiceImpl implements MemberService {
         memberInfo.setAvatar(member.getAvatar());
         memberInfo.setName(member.getName());
         memberInfo.setEmail(member.getEmail());
+        memberInfo.setCreatedDate(member.getCreatedDate());
 
         List<Article> articleList = articleDao.getArticleByMemberId(memberId);
         List<IndexArticleResponse> iarList = new ArrayList<>();
@@ -130,6 +132,20 @@ public class MemberServiceImpl implements MemberService {
 
         memberDao.changePasswordByMemberId(member.getMemberId(), pe.encode(cpr.getNewPassword()));
 
+        return "修改成功";
+    }
+
+    @Override
+    public String changeName(ChangeNameRequest cnr) {
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = (Member) object;
+
+        if(member == null) return "查無此帳號";
+
+        String flag = memberDao.checkName(cnr.getName());
+        if(flag != null) return "暱稱重覆";
+
+        memberDao.setName(member.getMemberId(), cnr.getName());
         return "修改成功";
     }
 }

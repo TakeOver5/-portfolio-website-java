@@ -57,13 +57,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] URL_ADMIN = {
-            "/members"
+            "/members",
+            "/members/**",
+            "/article/**/viewable",
+            "/articles/simple",
+            "/articles/simple/**",
+            "/member/{memberId}/auth"
     };
 
     private static final String[] URL_MEMBER = {
-            "/avatar",
+            "/member/avatar",
             "/article",
             "/article/**/message",
+            "/member/changepw",
+            "/member/changename",
     };
 
     @Override
