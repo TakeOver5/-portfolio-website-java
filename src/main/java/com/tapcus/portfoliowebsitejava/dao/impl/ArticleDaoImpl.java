@@ -165,4 +165,13 @@ public class ArticleDaoImpl implements ArticleDao {
         map.put("articleId", articleId);
         namedParameterJdbcTemplate.update(sql, map);
     }
+
+    @Override
+    public void deleteArticle(Integer memberId, Integer articleId) {
+        String sql = "DELETE FROM article WHERE member_id = :memberId and article_id = :articleId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        map.put("articleId", articleId);
+        namedParameterJdbcTemplate.update(sql, map);
+    }
 }

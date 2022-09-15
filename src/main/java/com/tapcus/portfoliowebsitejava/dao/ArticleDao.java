@@ -33,4 +33,6 @@ public interface ArticleDao {
     List<ArticleSimple> getArticlesSimple(Integer limit, Integer offset);
 
     void setViewable(Integer article, Integer view);
+
+    void deleteArticle(Integer memberId, Integer articleId);
 }

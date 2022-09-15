@@ -85,6 +85,13 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
+    @DeleteMapping("/article/{articleId}")
+    public ResponseEntity<Result<Object>> deleteArticle(@PathVariable Integer articleId) {
+        articleService.deleteArticle(articleId);
+        Result<Object> r = new Result<>(200, "刪除成功");
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
     @Validated
     @PostMapping("/article/{articleId}/message")
     public ResponseEntity<Result<Map<String, Object>>> uploadMessage(@PathVariable Integer articleId,

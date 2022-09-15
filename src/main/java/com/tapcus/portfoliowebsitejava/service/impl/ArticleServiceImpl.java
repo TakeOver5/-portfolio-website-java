@@ -8,16 +8,14 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dao.MemberDao;
-import com.tapcus.portfoliowebsitejava.model.Article;
-import com.tapcus.portfoliowebsitejava.model.ArticleDetail;
-import com.tapcus.portfoliowebsitejava.model.ArticleSimple;
-import com.tapcus.portfoliowebsitejava.model.MessageDetail;
+import com.tapcus.portfoliowebsitejava.model.*;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -86,6 +84,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void setViewable(Integer articleId, Integer view) {
         articleDao.setViewable(articleId, view);
+    }
+
+    @Override
+    public void deleteArticle(Integer articleId) {
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = (Member) object;
+        if(member != null) articleDao.deleteArticle(member.getMemberId(), articleId);
+        else return;
     }
 
     // 上傳整合

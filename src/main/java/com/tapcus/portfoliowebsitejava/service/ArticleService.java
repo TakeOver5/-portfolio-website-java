@@ -37,4 +37,6 @@ public interface ArticleService {
     List<ArticleSimple> getArticlesSimple(Integer limit, Integer offset);
 
     void setViewable(Integer articleId, Integer view);
+
+    void deleteArticle(Integer articleId);
 }
