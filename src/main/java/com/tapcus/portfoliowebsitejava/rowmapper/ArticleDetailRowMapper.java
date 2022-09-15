@@ -19,8 +19,10 @@ public class ArticleDetailRowMapper implements RowMapper<ArticleDetail> {
         ad.setIntroduction(rs.getString("introduction"));
         ad.setContent(rs.getString("content"));
         ad.setCoverPath(rs.getString("cover_path"));
+        ad.setCreatedDate(rs.getTimestamp("created_date"));
         ad.setLastModifiedDate(rs.getTimestamp("last_modified_date"));
         ad.setGitFilePath(rs.getString("git_file_path"));
+        ad.setMemberId(rs.getInt("member_id"));
         ad.setAvatar(rs.getBytes("avatar"));
         ad.setName(rs.getString("name"));
 

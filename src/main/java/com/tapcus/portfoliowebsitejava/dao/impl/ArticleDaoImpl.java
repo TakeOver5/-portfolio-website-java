@@ -95,7 +95,7 @@ public class ArticleDaoImpl implements ArticleDao {
     @Override
     public ArticleDetail getArticle(Integer articleId) {
 
-        String sql = "SELECT a.article_id, a.title, a.introduction, a.content, a.cover_path, a.last_modified_date, a.git_file_path, m.avatar, m.name " +
+        String sql = "SELECT a.article_id, a.title, a.introduction, a.content, a.cover_path, a.created_date , a.last_modified_date, a.git_file_path, m.member_id ,m.avatar, m.name " +
                 "FROM article as a " +
                 "LEFT JOIN member as m ON a.member_id = m.member_id " +
                 "WHERE a.article_id = :articleId";

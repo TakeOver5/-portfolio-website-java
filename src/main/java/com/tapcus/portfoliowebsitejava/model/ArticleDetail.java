@@ -12,8 +12,10 @@ public class ArticleDetail {
     private String introduction;
     private String content;
     private String coverPath;
+    private Date createdDate;
     private Date lastModifiedDate;
     private String gitFilePath;
+    private Integer memberId;
     private byte[] avatar;
     private String name;
     private List<MessageDetail> messageDetail;
