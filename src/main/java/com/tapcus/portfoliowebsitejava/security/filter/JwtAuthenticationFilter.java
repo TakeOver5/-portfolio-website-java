@@ -82,8 +82,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             // 自動登入不用給密碼
             // 第一個給物件
             UsernamePasswordAuthenticationToken token
-                    = new UsernamePasswordAuthenticationToken(member, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authority));
+                    = new UsernamePasswordAuthenticationToken(member, member.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(authority));
 
+
+            // 0UsernamePasswordAuthenticationToken token
+            //        = new UsernamePasswordAuthenticationToken(member, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authority));
 
 
             // 保存用戶是誰，是否被認證，具有哪些角色
