@@ -86,7 +86,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/article/{articleId}")
-    public ResponseEntity<Result<Object>> deleteArticle(@PathVariable Integer articleId) {
+    public ResponseEntity<Result<Object>> deleteArticle(@PathVariable Integer articleId) throws IOException {
         articleService.deleteArticle(articleId);
         Result<Object> r = new Result<>(200, "刪除成功");
         return ResponseEntity.status(HttpStatus.OK).body(r);

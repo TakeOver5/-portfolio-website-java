@@ -11,6 +11,7 @@ import com.tapcus.portfoliowebsitejava.dao.MemberDao;
 import com.tapcus.portfoliowebsitejava.model.*;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ import java.util.UUID;
 import static com.google.cloud.storage.BlobInfo.newBuilder;
 
 @Service
+@Slf4j
 public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
@@ -87,11 +89,20 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void deleteArticle(Integer articleId) {
+    public void deleteArticle(Integer articleId) throws IOException {
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = (Member) object;
+
+        String coverPath = articleDao.getArticleCoverUrlByArticleIdMemberId(member.getMemberId(), articleId);
+
+        coverPath = coverPath.substring(75, 115);
+
         if(member != null) articleDao.deleteArticle(member.getMemberId(), articleId);
         else return;
+
+        if(coverPath != null) {
+            deleteFile(coverPath);
+        } else return;
     }
 
     // 上傳整合

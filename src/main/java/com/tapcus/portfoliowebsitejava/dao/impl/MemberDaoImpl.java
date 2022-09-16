@@ -156,6 +156,5 @@ public class MemberDaoImpl implements MemberDao {
         } catch (Exception e) {
             return null;
         }
-
     }
 }

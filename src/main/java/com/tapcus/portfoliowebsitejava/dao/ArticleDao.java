@@ -35,4 +35,6 @@ public interface ArticleDao {
     void setViewable(Integer article, Integer view);
 
     void deleteArticle(Integer memberId, Integer articleId);
+
+    String getArticleCoverUrlByArticleIdMemberId(Integer memberId, Integer articleId);
 }

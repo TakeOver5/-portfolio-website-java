@@ -38,5 +38,5 @@ public interface ArticleService {
 
     void setViewable(Integer articleId, Integer view);
 
-    void deleteArticle(Integer articleId);
+    void deleteArticle(Integer articleId) throws IOException;
 }
