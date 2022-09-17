@@ -70,11 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] URL_MEMBER = {
-            "/member/avatar",
             "/article",
             "/article/**/message",
-            "/member/changepw",
-            "/member/changename",
     };
 
     @Override

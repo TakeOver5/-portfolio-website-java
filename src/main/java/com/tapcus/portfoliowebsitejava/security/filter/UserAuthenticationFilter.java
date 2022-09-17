@@ -19,6 +19,8 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
     protected String obtainPassword(HttpServletRequest request) {
         String password = this.getBodyParams(request).get(super.SPRING_SECURITY_FORM_PASSWORD_KEY);
         if(!StringUtils.isEmpty(password)) {
+            // 登入重覆問題解決
+            threadLocal = new ThreadLocal<>();
             return password;
         }
         return super.obtainPassword(request);
