@@ -69,6 +69,7 @@ public class ArticleDaoImpl implements ArticleDao {
     public List<Article> getArticles(Integer limit, Integer offset) {
         String sql = "SELECT * " +
                 "FROM article WHERE 1=1 AND viewable=true " +
+                "ORDER BY last_modified_date DESC " +
                 "LIMIT :limit OFFSET :offset";
         Map<String, Object> map = new HashMap<>();
         map.put("limit", limit);
@@ -147,6 +148,7 @@ public class ArticleDaoImpl implements ArticleDao {
         String sql = "SELECT a.article_id, a.title, a.last_modified_date, a.viewable, m.member_id ,m.name, m.avatar, m.email " +
                 "FROM article as a " +
                 "LEFT JOIN member as m ON a.member_id = m.member_id " +
+                "ORDER BY last_modified_date DESC " +
                 "LIMIT :limit OFFSET :offset";
         Map<String, Object> map = new HashMap<>();
         map.put("limit", limit);
