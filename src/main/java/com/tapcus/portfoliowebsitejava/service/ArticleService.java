@@ -39,4 +39,6 @@ public interface ArticleService {
     void setViewable(Integer articleId, Integer view);
 
     void deleteArticle(Integer articleId) throws IOException;
+
+    void uploadEditArticle(Integer articleId, String title, String introduction, String content, String oldCover, MultipartFile newCover, String git_file_path) throws IOException;
 }

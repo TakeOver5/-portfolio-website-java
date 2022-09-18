@@ -1,5 +1,6 @@
 package com.tapcus.portfoliowebsitejava.controller;
 
+import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.dto.AddMessageRequest;
 import com.tapcus.portfoliowebsitejava.dto.IndexArticleResponse;
 import com.tapcus.portfoliowebsitejava.model.Article;
@@ -9,6 +10,7 @@ import com.tapcus.portfoliowebsitejava.model.Member;
 import com.tapcus.portfoliowebsitejava.service.ArticleService;
 import com.tapcus.portfoliowebsitejava.util.Page;
 import com.tapcus.portfoliowebsitejava.util.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private ArticleDao articleDao;
 
     @Validated
     @PostMapping("/article")
@@ -42,7 +47,7 @@ public class ArticleController {
                                                                      @RequestParam @NotBlank(message = "內文不能空白") @Length(max = 65535, message = "內文過長") String content,
                                                                      @RequestPart @NotNull(message = "請選擇一張封面上傳") MultipartFile cover,
                                                                      @RequestParam @NotBlank(message = "GitHub 路徑不能空白") @Pattern(regexp = "^https:\\/\\/github\\.com\\/[^\\s]+\\/[^\\s]+",
-                                                                message = "密碼必須為英數混合且長度 8~16 碼") String git_file_path) throws IOException {
+                                                                message = "GitHub 路徑錯誤") String git_file_path) throws IOException {
         // 驗證圖片大小
         // 取得檔名，驗證副檔名
         String filename = cover.getOriginalFilename();
@@ -161,4 +166,53 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(r);
     }
 
+    @Validated
+    @PostMapping("/article/edit/{articleId}")
+    public ResponseEntity<Result<Object>> getEditArticle(@PathVariable Integer articleId,
+                                                         @RequestParam @NotBlank(message = "標題不能空白") @Length(max = 30, message = "標題過長") String title,
+                                                         @RequestParam @NotBlank(message = "介紹不能空白") @Length(max = 90, message = "介紹過長") String introduction,
+                                                         @RequestParam @NotBlank(message = "內文不能空白") @Length(max = 65535, message = "內文過長") String content,
+                                                         @RequestParam @NotBlank(message = "原封面不能空白") @Length(min = 125, max = 125, message = "路徑不符") String oldCover,
+                                                         @RequestPart(required = false) MultipartFile newCover,
+                                                         @RequestParam @NotBlank(message = "GitHub 路徑不能空白") @Pattern(regexp = "^https:\\/\\/github\\.com\\/[^\\s]+\\/[^\\s]+",
+                                                                 message = "GitHub 路徑錯誤") String git_file_path) throws IOException {
+        // 先查看對應文章是否存在
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = (Member) object;
+
+        String checkArticle = articleDao.getArticleCoverUrlByArticleIdMemberId(member.getMemberId(), articleId);
+
+        if(checkArticle == null) {
+            Result<Object> r = new Result<>(404, "文章不存在");
+            return ResponseEntity.status(HttpStatus.OK).body(r);
+        }
+
+        if(newCover != null) {
+            // 驗證圖片大小
+            // 取得檔名，驗證副檔名
+            String filename = newCover.getOriginalFilename();
+
+            // 得到副檔名
+            String fx = FilenameUtils.getExtension(filename);
+            if(!(fx.equals("png") || fx.equals("jpg")))
+                throw new IOException("檔案格式不正確");
+
+            // 驗證 < 2Mb
+            double fs = (double) newCover.getSize() / 1024;
+            if(fs >= 2048)
+                throw new IOException("檔案大小大於 2 Mb");
+
+            // 驗證長寛
+            BufferedImage bufferedImage = ImageIO.read(newCover.getInputStream());
+            int height = bufferedImage.getHeight();
+            int width = bufferedImage.getWidth();
+            if(height > 600 || width > 600)
+                throw new IOException("圖片大小不正確");
+        }
+
+        articleService.uploadEditArticle(articleId, title, introduction, content, oldCover, newCover, git_file_path);
+
+        Result<Object> r = new Result<>(200, "修改成功");
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
 }

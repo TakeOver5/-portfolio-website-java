@@ -105,6 +105,20 @@ public class ArticleServiceImpl implements ArticleService {
         } else return;
     }
 
+    @Override
+    public void uploadEditArticle(Integer articleId, String title, String introduction, String content, String oldCover, MultipartFile newCover, String git_file_path) throws IOException {
+        // 如果有新圖片要上傳到 firebase，返回 url，並刪除原有的 firebase url
+        String coverUrl;
+        if(newCover != null) {
+            coverUrl = upload(newCover);
+            oldCover = oldCover.substring(75, 115);
+            deleteFile(oldCover);
+        } else {
+            coverUrl = null;
+        }
+        articleDao.uploadEditArticle(articleId, title, introduction, content, coverUrl, git_file_path);
+    }
+
     // 上傳整合
     public String upload(MultipartFile multipartFile) throws IOException {
         String fileName = null;

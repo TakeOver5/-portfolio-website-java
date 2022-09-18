@@ -3,6 +3,7 @@ package com.tapcus.portfoliowebsitejava.dao.impl;
 import com.tapcus.portfoliowebsitejava.dao.ArticleDao;
 import com.tapcus.portfoliowebsitejava.model.*;
 import com.tapcus.portfoliowebsitejava.rowmapper.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@Slf4j
 public class ArticleDaoImpl implements ArticleDao {
 
     @Autowired
@@ -192,5 +194,27 @@ public class ArticleDaoImpl implements ArticleDao {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public void uploadEditArticle(Integer articleId, String title, String introduction, String content, String coverUrl, String git_file_path) {
+
+        String sql = "UPDATE article SET " +
+                "title = :title, " +
+                "introduction = :introduction, " +
+                "content = :content," +
+                "git_file_path = :git_file_path ";
+        Map<String, Object> map = new HashMap<>();
+        if(coverUrl != null) {
+            sql += "cover_path = :cover_path, ";
+            map.put("cover_path", coverUrl);
+        }
+        sql += "where article_id = :articleId ";
+        map.put("title", title);
+        map.put("introduction", introduction);
+        map.put("content", content);
+        map.put("articleId", articleId);
+        map.put("git_file_path", git_file_path);
+        namedParameterJdbcTemplate.update(sql, map);
     }
 }

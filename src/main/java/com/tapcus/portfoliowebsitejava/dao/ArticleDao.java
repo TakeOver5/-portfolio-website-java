@@ -37,4 +37,6 @@ public interface ArticleDao {
     void deleteArticle(Integer memberId, Integer articleId);
 
     String getArticleCoverUrlByArticleIdMemberId(Integer memberId, Integer articleId);
+
+    void uploadEditArticle(Integer articleId, String title, String introduction, String content, String coverUrl, String git_file_path);
 }
